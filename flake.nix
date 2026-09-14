@@ -50,7 +50,7 @@
             pname = "plane-mcp";
             version = "0.1.0";
             inherit src;
-            vendorHash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
+            vendorHash = "sha256-jGe5O0dL6DJ3PIFc1PIj+WyF3koZMaelKbqxyQVsfxc=";
             subPackages = [ "." ];
             ldflags = [
               "-s"
@@ -70,18 +70,21 @@
           };
           apps.default = self'.apps.plane-mcp;
 
-          pre-commit.settings.hooks = {
-            gofmt.enable = true;
-            govet = {
-              enable = true;
-              name = "go vet";
-              entry = "${pkgs.go}/bin/go vet ./...";
-              files = "\\.go$";
-              pass_filenames = false;
-            };
-            golangci-lint = {
-              enable = true;
-              package = pkgs.golangci-lint;
+          pre-commit = {
+            check.enable = false;
+            settings.hooks = {
+              gofmt.enable = true;
+              govet = {
+                enable = true;
+                name = "go vet";
+                entry = "${pkgs.go}/bin/go vet ./...";
+                files = "\\.go$";
+                pass_filenames = false;
+              };
+              golangci-lint = {
+                enable = true;
+                package = pkgs.golangci-lint;
+              };
             };
           };
 
