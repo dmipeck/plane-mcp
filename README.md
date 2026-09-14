@@ -70,12 +70,12 @@ Tool requires `workspace` (Plane workspace slug).
 | `project_create` | `workspace`, `name`, `identifier` | `description` |
 | `project_update` | `workspace`, `project_id` | `name`, `identifier`, `description` |
 | `project_delete` | `workspace`, `project_id` | — |
+| `state_list` | `workspace`, `project_id` | `cursor`, `per_page` |
 | `workitem_list` | `workspace`, `project_id` | `cursor`, `per_page`, `order_by` |
 | `workitem_view` | `workspace`, and either (`project_id` + `workitem_id`) or `identifier` (e.g. `PROJ-123`) | — |
 | `workitem_create` | `workspace`, `project_id`, `name` | `state`, `description`, `priority`, `assignees`, `labels`, `parent` |
 | `workitem_update` | `workspace`, `project_id`, `workitem_id` | `name`, `state`, `description`, `priority`, `assignees`, `labels`, `parent` |
 | `workitem_delete` | `workspace`, `project_id`, `workitem_id` | — |
-| `state_list` | `workspace`, `project_id` | `cursor`, `per_page` |
 
 State is a supporting Resource only in v0.1: `state_list` is enough to resolve
 State UUIDs for workitem writes. There are no state create/update/delete/view
