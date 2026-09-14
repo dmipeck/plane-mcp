@@ -2,7 +2,7 @@
 
 Multi-workspace Plane MCP server (Go) over **stdio**. A Connection is configured
 with a Plane API base URL and PAT only — it is not locked to one Workspace.
-Every Tool takes an explicit `workspace` slug (Tools land in later issues).
+Every Tool takes an explicit `workspace` slug.
 
 ## Connection config
 
@@ -60,7 +60,11 @@ OpenAPI SoT (pin `makeplane/plane` `5f7d927…` / v1.4.2). See
 
 ## Tool inventory
 
-v0.1 will register eleven Tools (`project_*`, `workitem_*`, `state_list`). This
-scaffold ships with **zero Tools** registered — Connection and stdio shell only.
+| Tool | Required args | Optional args |
+| --- | --- | --- |
+| `project_list` | `workspace` | `cursor`, `per_page`, `order_by` |
+
+v0.1 will also register `project_{view,create,update,delete}`, `workitem_*`, and
+`state_list` (later issues).
 
 Domain glossary: [`CONTEXT.md`](./CONTEXT.md).
