@@ -60,16 +60,22 @@ OpenAPI SoT (pin `makeplane/plane` `5f7d927…` / v1.4.2). See
 
 ## Tool inventory
 
+Eleven Tools named `{resource}_{action}` (`list|view|create|update|delete`). Every
+Tool requires `workspace` (Plane workspace slug).
+
 | Tool | Required args | Optional args |
 | --- | --- | --- |
 | `project_list` | `workspace` | `cursor`, `per_page`, `order_by` |
-| `project_view` | `workspace`, `project_id` | |
+| `project_view` | `workspace`, `project_id` | — |
 | `project_create` | `workspace`, `name`, `identifier` | `description` |
 | `project_update` | `workspace`, `project_id` | `name`, `identifier`, `description` |
-| `project_delete` | `workspace`, `project_id` | |
-| `state_list` | `workspace`, `project_id` | `cursor`, `per_page` |
+| `project_delete` | `workspace`, `project_id` | — |
 | `workitem_list` | `workspace`, `project_id` | `cursor`, `per_page`, `order_by` |
 | `workitem_view` | `workspace`, and either (`project_id` + `workitem_id`) or `identifier` (e.g. `PROJ-123`) | — |
+| `workitem_create` | `workspace`, `project_id`, `name` | `state`, `description`, `priority`, `assignees`, `labels`, `parent` |
+| `workitem_update` | `workspace`, `project_id`, `workitem_id` | `name`, `state`, `description`, `priority`, `assignees`, `labels`, `parent` |
+| `workitem_delete` | `workspace`, `project_id`, `workitem_id` | — |
+| `state_list` | `workspace`, `project_id` | `cursor`, `per_page` |
 
 State is a supporting Resource only in v0.1: `state_list` is enough to resolve
 State UUIDs for workitem writes. There are no state create/update/delete/view
@@ -78,7 +84,7 @@ Tools (collateral `create_state` on the generated client is never registered).
 `workitem_view` accepts dual id forms: UUID pair (`project_id` + `workitem_id`) or
 a single human `identifier` like `PROJ-123` (split into project_identifier +
 issue_identifier before the Plane call). No PQL/search on `workitem_list` in v0.1.
-
-v0.1 will also register `workitem_{create,update,delete}` (later issues).
+`workitem_create` / `workitem_update` map Tool `description` to Plane
+`description_html`.
 
 Domain glossary: [`CONTEXT.md`](./CONTEXT.md).
