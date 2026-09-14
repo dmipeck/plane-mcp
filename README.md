@@ -63,8 +63,13 @@ OpenAPI SoT (pin `makeplane/plane` `5f7d927…` / v1.4.2). See
 | Tool | Required args | Optional args |
 | --- | --- | --- |
 | `project_list` | `workspace` | `cursor`, `per_page`, `order_by` |
+| `state_list` | `workspace`, `project_id` | `cursor`, `per_page` |
 
-v0.1 will also register `project_{view,create,update,delete}`, `workitem_*`, and
-`state_list` (later issues).
+State is a supporting Resource only in v0.1: `state_list` is enough to resolve
+State UUIDs for workitem writes. There are no state create/update/delete/view
+Tools (collateral `create_state` on the generated client is never registered).
+
+v0.1 will also register `project_{view,create,update,delete}` and `workitem_*`
+(later issues).
 
 Domain glossary: [`CONTEXT.md`](./CONTEXT.md).

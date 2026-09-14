@@ -53,7 +53,7 @@ func TestNew_FailsWhenAPIKeyMissing(t *testing.T) {
 	}
 }
 
-func TestNew_RegistersOnlyProjectList(t *testing.T) {
+func TestNew_RegistersProjectListAndStateListOnly(t *testing.T) {
 	t.Parallel()
 
 	srv, err := planemcp.New(planemcp.Connection{APIKey: "test-pat"})
@@ -81,17 +81,22 @@ func TestNew_RegistersOnlyProjectList(t *testing.T) {
 	if err != nil {
 		t.Fatalf("ListTools: %v", err)
 	}
-	if len(tools.Tools) != 1 {
-		t.Fatalf("registered tools = %d, want 1", len(tools.Tools))
+	if len(tools.Tools) != 2 {
+		t.Fatalf("registered tools = %d, want 2", len(tools.Tools))
 	}
-	if tools.Tools[0].Name != "project_list" {
-		t.Fatalf("tool = %q, want project_list", tools.Tools[0].Name)
-	}
+	names := map[string]bool{}
 	for _, tool := range tools.Tools {
+		names[tool.Name] = true
 		switch tool.Name {
-		case "create_state", "state_create", "state_list",
+		case "create_state", "state_create", "state_view", "state_update", "state_delete",
 			"project_view", "project_create", "project_update", "project_delete":
-			t.Fatalf("unexpected Tool %q registered in project_list ticket", tool.Name)
+			t.Fatalf("unexpected Tool %q registered", tool.Name)
 		}
+	}
+	if !names["project_list"] {
+		t.Fatal("project_list not registered")
+	}
+	if !names["state_list"] {
+		t.Fatal("state_list not registered")
 	}
 }
