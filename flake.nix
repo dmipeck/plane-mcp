@@ -32,6 +32,7 @@
           ...
         }:
         let
+          inherit (pkgs) lib;
           src = pkgs.lib.cleanSourceWith {
             src = self;
             filter =
@@ -44,9 +45,8 @@
               && base != ".agent"
               && base != ".direnv";
           };
-        in
-        {
-          packages.plane-mcp = pkgs.buildGoModule {
+
+          plane-mcp = pkgs.buildGoModule {
             pname = "plane-mcp";
             version = "0.1.0";
             inherit src;
@@ -62,7 +62,29 @@
             };
           };
 
-          packages.default = self'.packages.plane-mcp;
+          # Linux-only OCI image (stdio MCP server + CA bundle for Plane HTTPS).
+          docker = pkgs.dockerTools.buildLayeredImage {
+            name = "plane-mcp";
+            tag = "latest";
+            contents = [
+              plane-mcp
+              pkgs.dockerTools.caCertificates
+            ];
+            config = {
+              Entrypoint = [ "/bin/plane-mcp" ];
+              # MCP hosts attach over stdio; keep the process in the foreground.
+              Cmd = [ ];
+            };
+          };
+        in
+        {
+          packages = {
+            inherit plane-mcp;
+            default = plane-mcp;
+          }
+          // lib.optionalAttrs pkgs.stdenv.hostPlatform.isLinux {
+            inherit docker;
+          };
 
           apps.plane-mcp = {
             type = "app";
@@ -101,7 +123,12 @@
             '';
           };
 
-          checks.plane-mcp = self'.packages.plane-mcp;
+          checks = {
+            plane-mcp = self'.packages.plane-mcp;
+          }
+          // lib.optionalAttrs pkgs.stdenv.hostPlatform.isLinux {
+            docker = self'.packages.docker;
+          };
         };
     };
 }
