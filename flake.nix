@@ -50,7 +50,7 @@
             pname = "plane-mcp";
             version = "0.1.0";
             inherit src;
-            vendorHash = "sha256-slSan6EIyUhmLE3StA3S1gnfNhzCQf6YSm5vwTyHUxM=";
+            vendorHash = "sha256-gKpXmBuFTVOoKZJ3wj1SzS261Fvp/r12u6FuDeCkcY4=";
             subPackages = [ "." ];
             ldflags = [
               "-s"
