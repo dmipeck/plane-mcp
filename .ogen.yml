@@ -1,0 +1,12 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/ogen-go/ogen/main/schemas/ogen.jsonschema.json
+# Path filter for plane-mcp v0.1: exactly the six OpenAPI templates needed by
+# the eleven Tools. Do not set filters.methods (would drop writes).
+generator:
+  features:
+    disable_all: true
+    enable:
+      - paths/client
+  filters:
+    path_regex: '^/api/v1/workspaces/\{[^/]+\}/(?:projects/?$|projects/\{[^/]+\}/?$|projects/\{[^/]+\}/work-items/?$|projects/\{[^/]+\}/work-items/\{[^/]+\}/?$|projects/\{[^/]+\}/states/?$|work-items/\{[^/]+\}/?$)'
+  ignore_not_implemented:
+    - all
