@@ -87,6 +87,7 @@ func New(conn Connection, opts ...Option) (*Server, error) {
 	}
 	srv.registerProjectTools()
 	srv.registerStateTools()
+	srv.registerWorkitemTools()
 	return srv, nil
 }
 
