@@ -31,19 +31,58 @@ export PLANE_API_KEY=plane_api_...
 plane-mcp --plane-base-url https://plane.example.com/api
 ```
 
+## Install
+
+### GitHub Releases
+
+On each `v*` tag, CI publishes binaries for:
+
+- linux amd64 / arm64
+- darwin amd64 / arm64
+- windows amd64
+
+Download `plane-mcp-<os>-<arch>` from
+[Releases](https://github.com/dmipeck/plane-mcp/releases), make it executable,
+and run it over **stdio** (the only transport in v0.1).
+
+### Container (GHCR)
+
+Multi-arch image built with Nix `dockerTools` and pushed to GHCR on `v*` tags:
+
+```bash
+docker run --rm -i \
+  -e PLANE_API_KEY=plane_api_... \
+  ghcr.io/dmipeck/plane-mcp:latest
+```
+
+Self-hosted base URL:
+
+```bash
+docker run --rm -i \
+  -e PLANE_API_KEY=plane_api_... \
+  ghcr.io/dmipeck/plane-mcp:latest \
+  --plane-base-url https://plane.example.com/api
+```
+
+### Nix
+
+```bash
+nix run github:dmipeck/plane-mcp
+# or, from a checkout:
+nix build          # ./result/bin/plane-mcp
+nix run
+nix build .#docker # Linux: OCI tarball (docker load < result)
+```
+
+Flake outputs: `packages.plane-mcp` (default), `apps.plane-mcp`, and on Linux
+`packages.docker`.
+
 ## Build and run
 
 ```bash
 go build -o plane-mcp .
 export PLANE_API_KEY=...
 ./plane-mcp
-```
-
-With Nix:
-
-```bash
-nix build
-nix run
 ```
 
 ## Development
