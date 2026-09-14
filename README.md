@@ -63,6 +63,10 @@ OpenAPI SoT (pin `makeplane/plane` `5f7d927…` / v1.4.2). See
 | Tool | Required args | Optional args |
 | --- | --- | --- |
 | `project_list` | `workspace` | `cursor`, `per_page`, `order_by` |
+| `project_view` | `workspace`, `project_id` | |
+| `project_create` | `workspace`, `name`, `identifier` | `description` |
+| `project_update` | `workspace`, `project_id` | `name`, `identifier`, `description` |
+| `project_delete` | `workspace`, `project_id` | |
 | `state_list` | `workspace`, `project_id` | `cursor`, `per_page` |
 | `workitem_list` | `workspace`, `project_id` | `cursor`, `per_page`, `order_by` |
 | `workitem_view` | `workspace`, and either (`project_id` + `workitem_id`) or `identifier` (e.g. `PROJ-123`) | — |
@@ -75,7 +79,6 @@ Tools (collateral `create_state` on the generated client is never registered).
 a single human `identifier` like `PROJ-123` (split into project_identifier +
 issue_identifier before the Plane call). No PQL/search on `workitem_list` in v0.1.
 
-v0.1 will also register `project_{view,create,update,delete}` and
-`workitem_{create,update,delete}` (later issues).
+v0.1 will also register `workitem_{create,update,delete}` (later issues).
 
 Domain glossary: [`CONTEXT.md`](./CONTEXT.md).
