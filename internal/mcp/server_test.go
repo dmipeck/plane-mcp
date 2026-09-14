@@ -81,20 +81,20 @@ func TestNew_RegistersProjectStateAndWorkitemTools(t *testing.T) {
 	if err != nil {
 		t.Fatalf("ListTools: %v", err)
 	}
-	if len(tools.Tools) != 7 {
-		t.Fatalf("registered tools = %d, want 7", len(tools.Tools))
+	if len(tools.Tools) != 11 {
+		t.Fatalf("registered tools = %d, want 11", len(tools.Tools))
 	}
 	names := map[string]bool{}
 	for _, tool := range tools.Tools {
 		names[tool.Name] = true
 		switch tool.Name {
-		case "create_state", "state_create", "state_view", "state_update", "state_delete",
-			"project_view", "project_create", "project_update", "project_delete":
+		case "create_state", "state_create", "state_view", "state_update", "state_delete":
 			t.Fatalf("unexpected Tool %q registered", tool.Name)
 		}
 	}
 	for _, want := range []string{
-		"project_list", "state_list",
+		"project_list", "project_view", "project_create", "project_update", "project_delete",
+		"state_list",
 		"workitem_list", "workitem_view", "workitem_create", "workitem_update", "workitem_delete",
 	} {
 		if !names[want] {
