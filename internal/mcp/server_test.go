@@ -84,4 +84,10 @@ func TestNew_RegistersZeroTools(t *testing.T) {
 	if len(tools.Tools) != 0 {
 		t.Fatalf("registered tools = %d, want 0", len(tools.Tools))
 	}
+	for _, tool := range tools.Tools {
+		switch tool.Name {
+		case "create_state", "state_create", "state_list":
+			t.Fatalf("unexpected Tool %q registered in scaffold/client ticket", tool.Name)
+		}
+	}
 }

@@ -51,7 +51,12 @@ nix run
 ```bash
 nix develop          # Go toolchain + pre-commit hooks
 go test ./...
+go generate ./...    # regenerate internal/oas from internal/plane/openapi.yaml
 ```
+
+Plane HTTP client code is generated with ogen from the vendored spectacular
+OpenAPI SoT (pin `makeplane/plane` `5f7d927…` / v1.4.2). See
+[`internal/plane/README.md`](./internal/plane/README.md).
 
 ## Tool inventory
 
