@@ -48,7 +48,7 @@ const oneStateJSON = `{
   }]
 }`
 
-const testProjectID = "550e8400-e29b-41d4-a716-446655440001"
+const testStateProjectID = "550e8400-e29b-41d4-a716-446655440001"
 
 func callStateList(t *testing.T, session *mcp.ClientSession, args map[string]any) *mcp.CallToolResult {
 	t.Helper()
@@ -110,7 +110,7 @@ func TestStateList_RequiresWorkspace(t *testing.T) {
 	}
 
 	res := callStateList(t, connectMCP(t, srv), map[string]any{
-		"project_id": testProjectID,
+		"project_id": testStateProjectID,
 	})
 	text := toolErrorText(t, res)
 	if !strings.Contains(strings.ToLower(text), "workspace") {
@@ -158,7 +158,7 @@ func TestStateList_SendsAuthPathAndMethod(t *testing.T) {
 
 	res := callStateList(t, connectMCP(t, srv), map[string]any{
 		"workspace":  "acme",
-		"project_id": testProjectID,
+		"project_id": testStateProjectID,
 	})
 	if res.IsError {
 		t.Fatalf("unexpected tool error: %s", toolErrorText(t, res))
@@ -169,7 +169,7 @@ func TestStateList_SendsAuthPathAndMethod(t *testing.T) {
 	if got.Method != http.MethodGet {
 		t.Fatalf("method = %q, want GET", got.Method)
 	}
-	wantPath := "/api/v1/workspaces/acme/projects/" + testProjectID + "/states/"
+	wantPath := "/api/v1/workspaces/acme/projects/" + testStateProjectID + "/states/"
 	if got.URL.Path != wantPath {
 		t.Fatalf("path = %q, want %s", got.URL.Path, wantPath)
 	}
@@ -195,7 +195,7 @@ func TestStateList_ForwardsOptionalParams(t *testing.T) {
 
 	res := callStateList(t, connectMCP(t, srv), map[string]any{
 		"workspace":  "acme",
-		"project_id": testProjectID,
+		"project_id": testStateProjectID,
 		"cursor":     "cur-1",
 		"per_page":   50,
 	})
@@ -226,7 +226,7 @@ func TestStateList_HappyPathReturnsStates(t *testing.T) {
 
 	res := callStateList(t, connectMCP(t, srv), map[string]any{
 		"workspace":  "acme",
-		"project_id": testProjectID,
+		"project_id": testStateProjectID,
 	})
 	if res.IsError {
 		t.Fatalf("unexpected tool error: %s", toolErrorText(t, res))
@@ -258,7 +258,7 @@ func TestStateList_MapsUnauthorized(t *testing.T) {
 
 	text := toolErrorText(t, callStateList(t, connectMCP(t, srv), map[string]any{
 		"workspace":  "acme",
-		"project_id": testProjectID,
+		"project_id": testStateProjectID,
 	}))
 	if !strings.Contains(strings.ToLower(text), "unauthorized") && !strings.Contains(strings.ToLower(text), "auth") {
 		t.Fatalf("error %q should describe auth failure", text)
@@ -280,7 +280,7 @@ func TestStateList_MapsNotFound(t *testing.T) {
 
 	text := toolErrorText(t, callStateList(t, connectMCP(t, srv), map[string]any{
 		"workspace":  "missing",
-		"project_id": testProjectID,
+		"project_id": testStateProjectID,
 	}))
 	if !strings.Contains(strings.ToLower(text), "not found") {
 		t.Fatalf("error %q should describe not-found", text)
@@ -302,7 +302,7 @@ func TestStateList_MapsForbidden(t *testing.T) {
 
 	text := toolErrorText(t, callStateList(t, connectMCP(t, srv), map[string]any{
 		"workspace":  "acme",
-		"project_id": testProjectID,
+		"project_id": testStateProjectID,
 	}))
 	if !strings.Contains(strings.ToLower(text), "forbidden") {
 		t.Fatalf("error %q should describe forbidden", text)
