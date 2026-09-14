@@ -53,7 +53,7 @@ func TestNew_FailsWhenAPIKeyMissing(t *testing.T) {
 	}
 }
 
-func TestNew_RegistersOnlyProjectList(t *testing.T) {
+func TestNew_RegistersProjectListAndWorkitemReadTools(t *testing.T) {
 	t.Parallel()
 
 	srv, err := planemcp.New(planemcp.Connection{APIKey: "test-pat"})
@@ -81,17 +81,22 @@ func TestNew_RegistersOnlyProjectList(t *testing.T) {
 	if err != nil {
 		t.Fatalf("ListTools: %v", err)
 	}
-	if len(tools.Tools) != 1 {
-		t.Fatalf("registered tools = %d, want 1", len(tools.Tools))
+	if len(tools.Tools) != 3 {
+		t.Fatalf("registered tools = %d, want 3", len(tools.Tools))
 	}
-	if tools.Tools[0].Name != "project_list" {
-		t.Fatalf("tool = %q, want project_list", tools.Tools[0].Name)
-	}
+	names := map[string]bool{}
 	for _, tool := range tools.Tools {
+		names[tool.Name] = true
 		switch tool.Name {
 		case "create_state", "state_create", "state_list",
-			"project_view", "project_create", "project_update", "project_delete":
-			t.Fatalf("unexpected Tool %q registered in project_list ticket", tool.Name)
+			"project_view", "project_create", "project_update", "project_delete",
+			"workitem_create", "workitem_update", "workitem_delete":
+			t.Fatalf("unexpected Tool %q registered in workitem-read ticket", tool.Name)
+		}
+	}
+	for _, want := range []string{"project_list", "workitem_list", "workitem_view"} {
+		if !names[want] {
+			t.Fatalf("missing Tool %q", want)
 		}
 	}
 }

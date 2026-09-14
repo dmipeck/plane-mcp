@@ -63,8 +63,14 @@ OpenAPI SoT (pin `makeplane/plane` `5f7d927…` / v1.4.2). See
 | Tool | Required args | Optional args |
 | --- | --- | --- |
 | `project_list` | `workspace` | `cursor`, `per_page`, `order_by` |
+| `workitem_list` | `workspace`, `project_id` | `cursor`, `per_page`, `order_by` |
+| `workitem_view` | `workspace`, and either (`project_id` + `workitem_id`) or `identifier` (e.g. `PROJ-123`) | — |
 
-v0.1 will also register `project_{view,create,update,delete}`, `workitem_*`, and
-`state_list` (later issues).
+`workitem_view` accepts dual id forms: UUID pair (`project_id` + `workitem_id`) or
+a single human `identifier` like `PROJ-123` (split into project_identifier +
+issue_identifier before the Plane call). No PQL/search on `workitem_list` in v0.1.
+
+v0.1 will also register `project_{view,create,update,delete}`, `workitem_{create,update,delete}`,
+and `state_list` (later issues).
 
 Domain glossary: [`CONTEXT.md`](./CONTEXT.md).

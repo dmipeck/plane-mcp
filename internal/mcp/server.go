@@ -86,6 +86,7 @@ func New(conn Connection, opts ...Option) (*Server, error) {
 		plane:      plane,
 	}
 	srv.registerProjectTools()
+	srv.registerWorkitemTools()
 	return srv, nil
 }
 
