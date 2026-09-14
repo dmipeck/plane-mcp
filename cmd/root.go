@@ -39,25 +39,12 @@ func newRoot() *cobra.Command {
 }
 
 func runRoot(cmd *cobra.Command, _ []string) error {
-	v := viper.New()
-	v.SetEnvPrefix("PLANE")
-	v.SetEnvKeyReplacer(strings.NewReplacer("-", "_", ".", "_"))
-	v.SetDefault(keyBaseURL, planemcp.DefaultBaseURL)
-
-	if err := v.BindEnv(keyBaseURL); err != nil {
-		return err
-	}
-	if err := v.BindEnv(keyAPIKey); err != nil {
-		return err
-	}
-	if err := v.BindPFlag(keyBaseURL, cmd.Flags().Lookup("plane-base-url")); err != nil {
+	conn, err := connectionFromCmd(cmd)
+	if err != nil {
 		return err
 	}
 
-	srv, err := planemcp.New(planemcp.Connection{
-		BaseURL: v.GetString(keyBaseURL),
-		APIKey:  v.GetString(keyAPIKey),
-	})
+	srv, err := planemcp.New(conn)
 	if err != nil {
 		return err
 	}
@@ -66,4 +53,28 @@ func runRoot(cmd *cobra.Command, _ []string) error {
 		return fmt.Errorf("mcp stdio: %w", err)
 	}
 	return nil
+}
+
+// connectionFromCmd resolves Connection settings: flag > env > default for URL;
+// API key from env only.
+func connectionFromCmd(cmd *cobra.Command) (planemcp.Connection, error) {
+	v := viper.New()
+	v.SetEnvPrefix("PLANE")
+	v.SetEnvKeyReplacer(strings.NewReplacer("-", "_", ".", "_"))
+	v.SetDefault(keyBaseURL, planemcp.DefaultBaseURL)
+
+	if err := v.BindEnv(keyBaseURL); err != nil {
+		return planemcp.Connection{}, err
+	}
+	if err := v.BindEnv(keyAPIKey); err != nil {
+		return planemcp.Connection{}, err
+	}
+	if err := v.BindPFlag(keyBaseURL, cmd.Flags().Lookup("plane-base-url")); err != nil {
+		return planemcp.Connection{}, err
+	}
+
+	return planemcp.Connection{
+		BaseURL: v.GetString(keyBaseURL),
+		APIKey:  v.GetString(keyAPIKey),
+	}, nil
 }
